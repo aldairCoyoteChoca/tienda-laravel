@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Tienda Laravel
+                    Tienda Laravel Development
                 </div>
 
                 <div class="links">
