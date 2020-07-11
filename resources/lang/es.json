@@ -22,5 +22,6 @@
     "Register":"Registrarse",
     "Remember Me":"Recuérdame",
     "Forgot Your Password?":"¿Olvidaste tu contraseña?",
-    "Name":"Nombre"
+    "Name":"Nombre",
+    "Logout":"Cerrar sesión"
 }
