@@ -11,16 +11,20 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+// Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//web
+Route::get('/', 'PageController@index')->name('index');
+Route::get('producto/{slug}', 'PageController@product')->name('product');
+Route::get('categoria/{slug}', 'PageController@category')->name('category');
+Route::get('etiqueta/{slug}', 'PageController@tag')->name('tag');
 
 // admin
-
 Route::middleware(['auth'])->group(function(){
     // roles
     Route::post('roles/store', 'RoleController@store')->name('roles.store')
@@ -66,7 +70,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('products/{product}/edit', 'ProductController@edit')->name('products.edit')
         ->middleware('permission:products.edit');
 
-     // USers
+     // Users
     Route::get('users', 'UserController@index')->name('users.index')
         ->middleware('permission:users.index');
 
@@ -81,5 +85,49 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('users/{user}/edit', 'UserController@edit')->name('users.edit')
         ->middleware('permission:users.edit');
+
+    //tags
+    Route::post('tags',          'TagController@store')  ->name('tags.store')
+            ->middleware('permission:products.create');
+
+    Route::get('tags',           'TagController@index')  ->name('tags.index')
+            ->middleware('permission:products.index');
+
+    Route::get('tags/create',    'TagController@create') ->name('tags.create')
+            ->middleware('permission:products.create');
+
+    Route::get('tags/{tag}',     'TagController@show')   ->name('tags.show')
+            ->middleware('permission:products.show');
+
+    Route::put('tags/{tag}',     'TagController@update') ->name('tags.update')
+            ->middleware('permission:products.edit');
+
+    Route::delete('tags/{tag}',  'TagController@destroy')->name('tags.destroy')
+            ->middleware('permission:products.destroy');
+
+    Route::get('tags/{tag}/edit','TagController@edit')   ->name('tags.edit')
+            ->middleware('permission:products.edit');
+            
+    //categorias
+    Route::post('categories',               'CategoryController@store')  ->name('categories.store')
+            ->middleware('permission:products.create');
+
+    Route::get('categories',                'CategoryController@index')  ->name('categories.index')
+            ->middleware('permission:products.index');
+
+    Route::get('categories/create',         'CategoryController@create') ->name('categories.create')
+            ->middleware('permission:products.create');
+
+    Route::get('categories/{category}',     'CategoryController@show')   ->name('categories.show')
+            ->middleware('permission:products.show');
+
+    Route::put('categories/{category}',     'CategoryController@update') ->name('categories.update')
+            ->middleware('permission:products.edit');
+
+    Route::delete('categories/{category}',  'CategoryController@destroy')->name('categories.destroy')
+            ->middleware('permission:products.destroy');
+
+    Route::get('categories/{category}/edit','CategoryController@edit')   ->name('categories.edit')
+            ->middleware('permission:products.edit');
     
 });

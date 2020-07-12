@@ -7,6 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'name', 'description',
+        'user_id', 'category_id', 'name', 'slug',
+        'excerpt', 'description', 'status', 'file'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)->withTimestamps();
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function tags(){
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
 }

@@ -11,6 +11,12 @@ class ProductsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Product::class, 80)->create();
+        factory(App\Product::class, 100)->create()->each(function(App\Product $product) {
+        	$product->tags()->attach([
+        		rand(1,10), 
+                rand(11,20),
+                rand(21,30), 
+        	]);
+        });
     }
 }

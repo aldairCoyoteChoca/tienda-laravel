@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Caffeinated\Shinobi\Models\Role;
+
 class User extends Authenticatable
 {
     use Notifiable, ShinobiTrait;
@@ -37,4 +39,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function products(){
+        return $this->hasMany(Product::class)->withTimestamps();
+    }
+
+    public function role(){
+        return $this->belongsToMany(Role::class);
+    }
 }

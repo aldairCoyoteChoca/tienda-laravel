@@ -15,9 +15,23 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->unsignedBigInteger('category_id')->nullable()->index();
             $table->string('name');
+            $table->string('slug')->unique();
+            $table->mediumText('excerpt')->nullable();
             $table->string('description');
+            $table->enum('status', ['PUBLISHED', 'DRAFT'])->default('DRAFT');
+            $table->string('file')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->foreign('category_id')->references('id')->on('categories')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

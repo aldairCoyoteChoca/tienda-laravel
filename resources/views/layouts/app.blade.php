@@ -48,6 +48,16 @@
                             <a class="nav-link" href="{{route('roles.index')}}">Roles</a>
                         </li>
                         @endcan
+                        @can('tags.index')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('tags.index')}}">Etiquetas</a>
+                        </li>
+                        @endcan
+                        @can('categories.index')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('categories.index')}}">Categorias</a>
+                        </li>
+                        @endcan
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -95,6 +105,26 @@
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if(count($errors))
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            @foreach ($errors->all() as $error)
+                            <ul>
+                                <li>
+                                    {{ $error }}
+                                </li>
+                            </ul>
+                            @endforeach
                         </div>
                     </div>
                 </div>

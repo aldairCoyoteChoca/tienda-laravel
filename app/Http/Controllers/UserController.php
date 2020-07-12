@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Caffeinated\Shinobi\Models\Role;
 use Illuminate\Http\Request;
+use App\Http\Requests\UsersUpdateRequest;
 
 class UserController extends Controller
 {
@@ -51,7 +52,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UsersUpdateRequest $request, User $user)
     {
         //actualiza el usuario
         $user->update($request->all());
