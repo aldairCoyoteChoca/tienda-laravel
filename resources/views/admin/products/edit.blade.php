@@ -8,7 +8,7 @@
                 <div class="card-header">Producto</div>
                 <div class="card-body">
                    {!! Form::model($product, ['route' => ['products.update', $product->id],
-                   'method' => 'PUT']) !!}
+                   'method' => 'PUT', 'files' => true]) !!}
                     @include('admin.products.partials.form')
                    {!! Form::close() !!}
                 </div>

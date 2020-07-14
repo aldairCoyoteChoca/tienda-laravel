@@ -13,7 +13,7 @@
                 <div class="card-header"> {{ $product->name }} </div>
                 <div class="card-body">
                     @if ($product->file)
-                    <img src=" {{ $product->file }} " class="card-img-top">
+                    <img src="{{ asset('/'.$product->file) }}" class="card-img-top">
                     @endif
                     <hr>
                     {{ $product->excerpt }}

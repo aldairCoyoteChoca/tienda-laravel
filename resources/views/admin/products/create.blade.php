@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">Producto</div>
                 <div class="card-body">
-                   {!! Form::open(['route' => ['products.store']]) !!}
+                   {!! Form::open(['route' => 'products.store', 'files' => true]) !!}
                     @include('admin.products.partials.form')
                    {!! Form::close() !!}
                 </div>

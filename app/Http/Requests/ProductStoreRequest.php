@@ -25,7 +25,7 @@ class ProductStoreRequest extends FormRequest
     {
         $rules = [
             'name'       => 'required|min:3',
-            'slug'       => 'required|unique:posts,slug',
+            'slug'       => 'required|unique:products,slug',
             'user_id'    => 'required|integer',
             'category_id'=> 'required|integer',
             'tags'       => 'required|array',

@@ -24,8 +24,16 @@ class TagStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3',
+            'name' => 'required|min:3|max:50',
             'slug' => 'required|unique:tags,slug',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'slug.unique' => 'Esta etiqueta ya ha sido registrada.',
+            'slug.required' => 'No puedes dejar el campo vacío.'
         ];
     }
 }

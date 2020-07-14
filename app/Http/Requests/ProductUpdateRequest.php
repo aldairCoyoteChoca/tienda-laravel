@@ -25,7 +25,7 @@ class ProductUpdateRequest extends FormRequest
     {
         $rules = [
             'name'       => 'required|min:3',
-            'slug'       => 'required|unique:posts,slug,' . $this->product,
+            'slug'       => 'required|unique:products,slug,' . $this->product->id,
             'user_id'    => 'required|integer',
             'category_id'=> 'required|integer',
             'tags'       => 'required|array',
@@ -42,4 +42,3 @@ class ProductUpdateRequest extends FormRequest
     }
 }
 
-// |unique:productos,name' . $this->product

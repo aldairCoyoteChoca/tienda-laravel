@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Category;
+use App\Tag;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use Illuminate\Support\Facades\Storage;
+use File;
 
 class ProductController extends Controller
 {
@@ -16,7 +20,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate();
+        $products = Product::OrderBy('id', 'DESC')
+        ->paginate();
 
         return view('admin.products.index', compact('products'));
     }
@@ -28,7 +33,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create');
+        $categories = Category::orderBy('name', 'ASC')->pluck('name', 'id');
+        $tags = Tag::orderBy('name', 'ASC')->get();
+
+        return view('admin.products.create', compact('categories', 'tags'));
     }
 
     /**
@@ -40,6 +48,14 @@ class ProductController extends Controller
     public function store(ProductStoreRequest $request)
     {
         $product = Product::create($request->all());
+
+        //image
+        if($request->file('file')){
+            $path = Storage::disk('public')->put('image', $request->file('file'));
+            $product->fill(['file' => $path])->save();
+        }
+        //tags
+        $product->tags()->attach($request->get('tags'));
 
         return redirect()->route('products.create', $product->id)
             ->with('info', 'Producto guardado con éxito');
@@ -62,9 +78,12 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductUpdateRequest $product)
+    public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+        $categories = Category::orderBy('name', 'ASC')->pluck('name', 'id');
+        $tags = Tag::orderBy('name', 'ASC')->get();
+
+        return view('admin.products.edit', compact('product', 'categories', 'tags'));
     }
 
     /**
@@ -74,9 +93,18 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        $product->update($request->all());
+        $product->fill($request->all())->save();
+
+        //image
+        if($request->file('file')){
+            $path = Storage::disk('public')->put('image', $request->file('file'));
+            $product->fill(['file' => $path])->save();
+        }
+
+        //tags
+        $product->tags()->sync($request->get('tags'));
 
         return redirect()->route('products.edit', $product->id)
             ->with('info', 'Producto actualizado con éxito');
