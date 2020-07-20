@@ -30,7 +30,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('index')}}">Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('carshop')}}">Carrito</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -131,8 +136,11 @@
             @yield('content')
         </main>
         <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
         <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/index.js') }}"></script>
         @yield('scripts')
+        @include('sweetalert::alert')
     </div>
 </body>
 </html>

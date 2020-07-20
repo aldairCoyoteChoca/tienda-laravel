@@ -16,6 +16,16 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->enum('pedidos', ['RECIBIR', 'NO RECIBIR'])->default('NO RECIBIR')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('photo')->nullable();
+            //datos fiscales
+            $table->string('name_fiscal')->nullable();
+            $table->string('rfc')->nullable();
+            $table->string('address_fiscal')->nullable();
+            
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="links">
-                    <a href=" {{ route('home') }} ">Ir al home</a>
+                    <a href=" {{ route('index') }} ">Ir al home</a>
                 </div>
             </div>
         </div>

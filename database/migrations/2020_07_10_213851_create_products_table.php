@@ -20,9 +20,11 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->mediumText('excerpt')->nullable();
-            $table->string('description');
+            $table->text('description');
             $table->enum('status', ['PUBLISHED', 'DRAFT'])->default('DRAFT');
             $table->string('file')->nullable();
+            $table->unsignedBigInteger('stock')->index();
+            $table->float('price');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')

@@ -47,4 +47,23 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsToMany(Role::class);
     }
+
+    public function carts(){
+        return $this->hasMany(Cart::class);
+    }
+
+    public function getCartAttribute(){
+
+        $cart = $this->carts()->where('status', 'Active')->first();
+        
+        if($cart)
+        return $cart;
+        
+        $cart = new Cart();
+        $cart->status = 'Active';
+        $cart->user_id = $this->id;
+        $cart->save();
+
+        return $cart;
+    }
 }

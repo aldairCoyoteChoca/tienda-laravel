@@ -1,30 +1,19 @@
 <?php
+Auth::routes(['verify' => true]);
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-// Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
+Route::get('/', function () {
+     return view('welcome');
+    });
+Route::get('/home', 'HomeController@index')->name('home');
 
 //web
-Route::get('/', 'PageController@index')->name('index');
+Route::get('productos', 'PageController@index')->name('index');
 Route::get('producto/{slug}', 'PageController@product')->name('product');
 Route::get('categoria/{slug}', 'PageController@category')->name('category');
 Route::get('etiqueta/{slug}', 'PageController@tag')->name('tag');
+Route::get('pago', 'pageController@pay')->name('pay.index');
 
-// admin
+// administrador del sistema
 Route::middleware(['auth'])->group(function(){
     // roles
     Route::post('roles/store', 'RoleController@store')->name('roles.store')
@@ -131,3 +120,47 @@ Route::middleware(['auth'])->group(function(){
             ->middleware('permission:products.edit');
     
 });
+
+//rutas de carrito
+Route::get('carrito',            'CarShopController@index')  ->name('carshop')
+->middleware('verified');
+//añadir al carrito
+Route::post('add/{product}','CarShopController@add')->name('carrito.add')
+->middleware('verified');
+
+Route::post('update','CarShopController@update')->name('carrito.update')
+->middleware('verified');
+
+Route::delete('compras/{cartDetail}','CarShopController@destroy')->name('carrito.delete');
+
+// rutas de los pedidos
+Route::post('order',             'CarShopController@order')  ->name('carrito.order')
+->middleware('verified');
+
+Route::get('pedidos',                       'PedidosController@pedidos')->name('pedidos')
+  ->middleware('verified');
+
+Route::get('admin/pedidos',                 'PedidosController@adminPedidos')->name('admin.pedidos')
+  ->middleware('verified');
+
+Route::post('cancelar',                     'PedidosController@cancelar')->name('cancelar')
+  ->middleware('verified');
+
+Route::post('entregado',                    'PedidosController@entregado')->name('entregado')
+  ->middleware('verified');
+
+Route::get('pedido/{pedido}',               'PedidosController@pedido') ->name('pedido')
+  ->middleware('verified');
+
+Route::get('detalles/{pedido}/user/{user}','PedidosController@detalles')->name('detalles.pedido')
+  ->middleware(['verified' , 'permission:products.index' ]);
+
+  // perfil
+Route::get('perfil',             'PerfilController@perfil')    ->name('perfil')
+->middleware('verified');
+
+Route::get('user/{user}/edit',   'PerfilController@editPerfil')->name('user.edit')
+->middleware('verified');
+
+Route::put('user/{user}',        'PerfilController@update')    ->name('user.update')
+->middleware('verified');

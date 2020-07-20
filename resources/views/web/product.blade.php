@@ -26,6 +26,23 @@
                     @foreach ($product->tags as $tag)
                     <a href=" {{ route('tag', $tag->slug) }} ">{{ $tag->name }} </a>
                     @endforeach
+                    @if ($product->stock === 0)
+                    <button class="" type="submit" name="action">
+                    Se termino :c
+                    <i class="">add_shopping_cart</i>
+                    </button>
+                    @else
+                    <form method="POST" action="{{ route('carrito.add', $product->id) }}">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{$product->id}}">
+                        <input type="hidden" name="quantify" value="1">
+                        <input type="hidden" name="price" value="{{ $product->price }}">
+                        <button class="add btn btn-sm btn-primary">
+                        Agregar
+                        <i class="">add_shopping_cart</i>
+                        </button>
+                    </form>
+                    @endif
                 </div>
             </div>
         </div>
