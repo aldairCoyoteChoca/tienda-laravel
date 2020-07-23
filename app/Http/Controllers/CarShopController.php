@@ -11,6 +11,7 @@ use App\Cart;
 use App\User;
 use App\Product;
 use App\Mail\NewOrder;
+use App\Mail\NewOrden;
 use Mail;
 use Alert;
 
@@ -32,7 +33,7 @@ class CarShopController extends Controller
 
   }
 
-  //le suma uno a la cantidad ya existente
+  //actualiza la cantidad ya existente
   public function update(Request $request)
   {      
     $cart   = auth()->user()->cart;
@@ -44,12 +45,12 @@ class CarShopController extends Controller
         $detail->subtotal = $detail->quantify * $detail->price;
         $detail->save();
       }
-      //$product->fill($request->all())->save();
       $cartDetailTotal = auth()->user()->cart->details->sum('quantify');
       $total = auth()->user()->cart->total;
       return response()->json([
         'message' => 'Producto actualizado.',
         'total_productos' => $cartDetailTotal,
+        'subtotal' => $detail->subtotal,
         'total' => $total,
       ]);
     }
@@ -82,8 +83,10 @@ class CarShopController extends Controller
         $cartDetail->subtotal = $cartDetail->price * $cartDetail->quantify;
         $cartDetail->save();
       }
+      $cartDetailTotal = auth()->user()->cart->details->sum('quantify');
       return response()->json([
-        'message' => 'Producto agregado al carrito.'
+        'message' => 'Producto agregado al carrito.',
+        'total_productos' => $cartDetailTotal
       ]);
     }
   }
@@ -111,29 +114,28 @@ class CarShopController extends Controller
      $address      =  auth()->user()->address;
      $postal_code  =  auth()->user()->postal_code;
     //  valida si los datos estan completos para poder enviar el correo de confirmación
-     if ($address && $postal_code) {
+      if ($address && $postal_code) {
         $total = auth()->user()->cart->details->sum('quantify');
-        // valida si hay productos en el carrito
-      if ($total === 0) {
-        alert()->info('¡Agrega algún producto!', 'Tu carrito esta vacío');
-        return redirect('index');
+        if ($total === 0) {
+            alert()->info('¡Agrega algún producto!', 'Tu carrito esta vacío');
+            return redirect('productos');
+        }else{
+          // si hay productos procedemos al pago
+            $client           = auth()->user();
+            $cart             = $client->cart;
+            $cart->status     = 'En camino';
+            $cart->order_date = Carbon::now();
+            $cart->save();
+            // envia un mail de pedido.
+            $recibir_pedidos  = User::where('pedidos', 'RECIBIR')->get();
+            Mail::to($recibir_pedidos)->send(new NewOrder($client, $cart));
+
+            alert()->success('Pedido enviado');
+            return redirect('productos');
+        }
       }else{
-        // si hay productos procedemos al pago
-        $client           = auth()->user();
-        $cart             = $client->cart;
-        $cart->status     = 'Pending';
-        $cart->order_date = Carbon::now();
-        $cart->save();
-        // envia un mail de pedido.
-        $recibir_pedidos  = User::where('pedidos', 'RECIBIR')->get();
-        Mail::to($recibir_pedidos)->send(new NewOrder($client, $cart));
-        alert()->success('Pedido enviado');
-        
+        alert()->info('Completa tus datos para ordenar', '¡Por favor!');
+        return redirect('perfil');
       }
-      return back();
-     }else{
-       alert()->info('Completa tus datos para ordenar', '¡Por favor!');
-       return redirect('perfil');
-     }
    }
 }

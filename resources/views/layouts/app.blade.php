@@ -7,14 +7,21 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="{{ asset('css/all.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{ url('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')}}" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="{{ asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/style.css')}}" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
     <div>
@@ -29,43 +36,30 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('index')}}">Productos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('carshop')}}">Carrito</a>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item ">
+                            <span id="cart_details" class="badge badge-secondary">
+                            @if(auth()->user())
+                                {{auth()->user()->cart->details->sum('quantify')}}
+                            @else
+                              0  
+                            @endif
+                            </span>
+                            <a class="nav-link float-left" href="{{route('carshop')}}">
+                                <span style="font-size: 2rem">
+                                    <i class="fas fa-shopping-cart "></i>   
+                                </span>
+                            </a>
                         </li>
                     </ul>
-
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav">
                         <!-- Authentication Links -->
-                        @can('products.index')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('products.index')}}">Productos</a>
-                        </li>
-                        @endcan
-                        @can('users.index')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('users.index')}}">Usuarios</a>
-                        </li>
-                        @endcan
-                        @can('roles.index')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('roles.index')}}">Roles</a>
-                        </li>
-                        @endcan
-                        @can('tags.index')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('tags.index')}}">Etiquetas</a>
-                        </li>
-                        @endcan
-                        @can('categories.index')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('categories.index')}}">Categorias</a>
-                        </li>
-                        @endcan
                         @guest
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -76,24 +70,45 @@
                         </li>
                         @endif
                         @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <span class="mr-2 d-none d-lg-inline text-gray-600 small">@isset(auth()->user()->name) {{ auth()->user()->name }} @endisset</span>
+                                @isset(auth()->user()->photo)
+                                <img class="img-profile rounded-circle imgRedonda" src="{{ asset(Auth::user()->photo) }}"  >
+                                @endisset
                             </a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}"
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                @can('products.index')
+                                <a class="dropdown-item" href="{{route('admin.pedidos')}}">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Admin
+                                </a>
+                                @endcan
+                                <a class="dropdown-item" href=" {{route('perfil')}} ">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
+                                </a>
+                                <a class="dropdown-item" href=" {{route('pedidos')}} ">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Mis pedidos
+                                </a>
+                              <div class="dropdown-divider"></div>
+                              
+                              <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                                     document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
+                                
                             </div>
-                        </li>
-                        @endguest
+                          </li>
+                          @endguest
                     </ul>
                 </div>
             </div>
@@ -136,8 +151,18 @@
             @yield('content')
         </main>
         <!-- Scripts -->
+        <!-- Bootstrap core JavaScript-->
+        <script src="{{ asset('js/jquery.min.js')}}"></script>
+        <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="{{ asset('js/jquery.easing.min.js')}}"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="{{ asset('js/sb-admin-2.min.js')}}"></script>
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-        <script src="{{ asset('js/app.js') }}"></script>
+        {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
         <script src="{{ asset('js/index.js') }}"></script>
         @yield('scripts')
         @include('sweetalert::alert')

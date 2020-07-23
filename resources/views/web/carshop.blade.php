@@ -44,7 +44,7 @@
                 </select>
               </form>
             </td>
-            <td>$ {{ $product->price * $product->quantify }} </td>
+            <td>$ <span id="subtotal">{{ $product->price * $product->quantify }}</span> </td>
             <td>
               {!! Form::open(['route' => ['carrito.delete', $product->id],
               'method' => 'DELETE']) !!}
@@ -80,20 +80,20 @@
                 @endif
               </td>
               <td>
-                $<span id="total" >{{ auth()->user()->cart->total }}</span>
+                $<span id="total_car" >{{ auth()->user()->cart->total }}</span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal1">
       Ordenar pedido
     </button>
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -102,8 +102,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form class="needs-validation" novalidate id="card-form">
+      <form class="needs-validation" novalidate id="card-form">
+        <div class="modal-body">
           <div class="row" id="formulario">
               <div class="container-fluid sombra espacio" id="cf">
                   <div class="text-center titulo espacio">TARJETAHABIENTE</div>
@@ -137,20 +137,18 @@
                   </div>
                   <div class="row">
                       <div class="form-group col-lg-6">
-                          <label for="card">Número de tarjeta:</label>
-                          <input type="password" class="form-control" name="card" id="card"  placeholder="16 Dígitos*"
-                                  required maxlength="16" minlength="15" data-conekta="card[number]" pattern="\d{15,16}">
-                          <div class="invalid-tooltip">
-                              Falta tu número de tarjeta.
-                          </div>
+                        <label for="cardChange">
+                          Número de tarjeta: </label>	
+                        <input type="text" class="form-control" id="cardChange" minlength="16" 
+                          maxlength="16" required placeholder="16 Dígitos*"/>
+                        <div class="invalid-tooltip" id="cardregex">
+                          Falta tu número de tarjeta.
+                        </div>
                       </div>
-                      <div class="form-group col-lg-6 popover1">
+                      <div class="form-group col-lg-6">
                           <label for="cvc">CVC/ CVV:</label>
-                          <input type="password" class="form-control" id="cvc" name="cvc" placeholder="CVC/ CVV*"
-                                  required maxlength="4" minlength="3" data-conekta="card[cvc]" data-toggle="popover" 
-                                  data-content="<p class='text-center'>Parte posterior de tu tarjeta</p>
-                                  <img src='./img/cvv_cvc.png' style='width:100%'>" pattern="\d{3,4}"
-                                  data-placement="auto" data-trigger="focus" data-container=".popover1" data-html='true' >
+                          <input type="text" class="form-control" id="cvc" placeholder="CVC/ CVV*"
+                                  required maxlength="4" minlength="3" data-conekta="card[cvc]" pattern="\d{3,4}">
                           <div class="invalid-tooltip">
                               Falta tu CVC/ CVV.
                           </div>
@@ -167,25 +165,43 @@
                               Falta la fecha de expiración(YYYY-MM) o no es una fecha válida.
                           </div>
                       </div>
-                  </div>
-                  <div class="row">
-                   <div class="col-12" id="precio">
-                   </div>
+                      <div class="form-group col-lg-6">
+                        <div class="container">
+                          <span name="total" id="gran_total">{{ auth()->user()->cart->total }}</span>
+                        </div>
+                      </div>
                   </div>
               </div>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-        {!! Form::open(['route' => ['carrito.order'],
-        'method' => 'POST']) !!}
-        <button type="button" class="btn btn-primary">
-          Pagar
-        </button>
-        {!! Form::close() !!}
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            Pagar
+          </button>
+        </div>
+        <input type="hidden" name="conektaTokenId" id="conektaTokenId">
+        <input type="hidden" name="description" id="description" value="Carrito: {{ auth()->user()->cart->id }}">
+        <input type="hidden" name="total" id="total" value="{{ auth()->user()->cart->total }}">
+        <input type="hidden" id="card" name="card" minlength="16" maxlength="16" data-conekta="card[number]" required/>
+      </form>
+      {!! Form::open(['route' => ['carrito.order'], 'id' => 'enviar',
+      'method' => 'POST']) !!}
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalLoader" tabindex="-1" role="dialog" aria-labelledby="modalLoaderTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="d-flex mx-auto">
+      <div class="spinner-grow" style="width: 8rem; height: 8rem;" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
   </div>
 </div>
+@endsection
+@section('scripts')
+<script src="https://cdn.conekta.io/js/latest/conekta.js"></script>
+<script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
 @endsection

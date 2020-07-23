@@ -27,7 +27,7 @@ class PerfilController extends Controller
         return view('web.editperfil', compact('user'));
         
     }
-    public function update(UserPerfilUpdateRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
         $user->update($request->all());
         //actualiza el usuario

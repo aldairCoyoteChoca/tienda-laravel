@@ -41,8 +41,8 @@ class TagController extends Controller
     {
         $tag = Tag::create($request->all());
 
-        return redirect()->route('tags.edit', $tag->id)
-            ->with('info', 'Etiqueta creada con éxito');
+        alert()->success('Etiqueta creada con éxito');
+        return redirect()->route('tags.edit', $tag->id);
     }
 
     /**
@@ -77,9 +77,9 @@ class TagController extends Controller
     public function update(TagUpdateRequest $request, Tag $tag)
     {
         $tag->fill($request->all())->save();
-        
-        return redirect()->route('tags.edit', $tag->id)
-            ->with('info', 'Etiqueta actualizada con éxito');
+
+        alert()->success('Etiqueta actualizada con éxito');
+        return redirect()->route('tags.edit', $tag->id);
     }
 
     /**
@@ -92,6 +92,7 @@ class TagController extends Controller
     {
         $tag->delete();
 
-        return back()->with('info', 'Eliminado correctamente');
+        alert()->success('Etiqueta eliminada con éxito');
+        return back();
     }
 }

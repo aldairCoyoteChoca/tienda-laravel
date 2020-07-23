@@ -57,8 +57,8 @@ class ProductController extends Controller
         //tags
         $product->tags()->attach($request->get('tags'));
 
-        return redirect()->route('products.create', $product->id)
-            ->with('info', 'Producto guardado con éxito');
+        alert()->success('Producto creado con éxito');
+        return redirect()->route('products.edit', $product->id);
     }
 
     /**
@@ -106,8 +106,8 @@ class ProductController extends Controller
         //tags
         $product->tags()->sync($request->get('tags'));
 
-        return redirect()->route('products.edit', $product->id)
-            ->with('info', 'Producto actualizado con éxito');
+        alert()->success('Producto actualizado con éxito');
+        return redirect()->route('products.show', $product->id);
     }
 
     /**
@@ -119,7 +119,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-
-        return back()->with('info', 'Producto eliminado correctamente');
+        alert()->success('Producto eliminado con éxito');
+        return back();
     }
 }

@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $fillable = [
         'user_id', 'category_id', 'name', 'slug',
-        'excerpt', 'description', 'status', 'file'
+        'excerpt', 'description', 'status', 'file', 'price', 'stock'
     ];
 
     public function user()

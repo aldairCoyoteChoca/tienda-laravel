@@ -41,8 +41,8 @@ class CategoryController extends Controller
     {
         $category = Category::create($request->all());
 
-        return redirect()->route('categories.edit', $category->id)
-            ->with('info', 'Categoría creada con éxito');
+        alert()->success('Categoria creada con éxito');
+        return redirect()->route('categories.edit', $category->id);
     }
 
     /**
@@ -78,8 +78,8 @@ class CategoryController extends Controller
     {
         $category->fill($request->all())->save();
         
-        return redirect()->route('categories.edit', $category->id)
-            ->with('info', 'Categoría actualizada con éxito');
+        alert()->success('Categoria actualizada con éxito');
+        return redirect()->route('categories.edit', $category->id);
     }
 
     /**
@@ -92,6 +92,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return back()->with('info', 'Eliminado correctamente');
+        alert()->success('Categoria eliminada con éxito');
+        return back();
     }
 }

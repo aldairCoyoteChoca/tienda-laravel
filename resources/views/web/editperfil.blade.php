@@ -12,7 +12,7 @@
           <span class="card-title center">Editar perfil</span>
           <br>
           <div class="">
-            {!! Form::model($user, ['route' => ['user.update', Auth::user()->id],
+            {!! Form::model($user, ['route' => ['user.update', auth()->user()->id],
              'method' => 'PUT', 'files' => true]) !!}
 
                 <div class="input-field black-text">

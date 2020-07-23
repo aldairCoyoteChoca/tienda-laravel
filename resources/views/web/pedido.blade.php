@@ -26,11 +26,13 @@
               @foreach ($productos as $producto)
               <tr>
                 <td>
-                  <img class="hide-on-small-only" width="50px" src="{{ asset($producto->post->file) }}">
+                  @isset($producto->product->file)
+                  <img class="hide-on-small-only" width="50px" src="{{ asset($producto->product->file) }}">
+                  @endisset
                 </td>
                 <td>
-                  <a href="{{route('post', $producto->post->slug)}}">
-                    {{ $producto->post->name }}
+                  <a href="{{route('product', $producto->product->slug)}}">
+                    {{ $producto->product->name }}
                   </a>
                 </td>
                 <td>${{ $producto->price }}</td>

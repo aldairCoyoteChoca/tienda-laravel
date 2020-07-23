@@ -4,8 +4,7 @@
 </div>
 
 <div class="form-group">
-{{ Form::label('slug', 'URL Amigable') }}
-{{ Form::text('slug', null, ['id' => 'slug', 'class' => 'form-control']) }}
+{{ Form::hidden('slug', null, ['id' => 'slug', 'class' => 'form-control']) }}
 </div>
 
 <div class="form-group">
@@ -14,7 +13,7 @@
 </div>
 
 <div class="form-group">
-{{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-primary']) }}
+{{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-success']) }}
 </div>
 
 @section('scripts')

@@ -11,7 +11,6 @@ Route::get('productos', 'PageController@index')->name('index');
 Route::get('producto/{slug}', 'PageController@product')->name('product');
 Route::get('categoria/{slug}', 'PageController@category')->name('category');
 Route::get('etiqueta/{slug}', 'PageController@tag')->name('tag');
-Route::get('pago', 'pageController@pay')->name('pay.index');
 
 // administrador del sistema
 Route::middleware(['auth'])->group(function(){
@@ -149,7 +148,7 @@ Route::post('cancelar',                     'PedidosController@cancelar')->name(
 Route::post('entregado',                    'PedidosController@entregado')->name('entregado')
   ->middleware('verified');
 
-Route::get('pedido/{pedido}',               'PedidosController@pedido') ->name('pedido')
+Route::get('pedido/{cart}',               'PedidosController@pedido') ->name('pedido')
   ->middleware('verified');
 
 Route::get('detalles/{pedido}/user/{user}','PedidosController@detalles')->name('detalles.pedido')

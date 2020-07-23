@@ -48,8 +48,8 @@ class RoleController extends Controller
         //actualizar permisos
         $role->permissions()->sync($request->get('permissions'));
 
-        return redirect()->route('roles.edit', $role->id)
-            ->with('info', 'Role creado con éxito');     
+        alert()->success('Role creado con éxito');
+        return redirect()->route('roles.edit', $role->id);     
     }
 
     /**
@@ -91,8 +91,8 @@ class RoleController extends Controller
         //actualizar permisos
         $role->permissions()->sync($request->get('permissions'));
 
-        return redirect()->route('roles.edit', $role->id)
-            ->with('info', 'Role actualizado con éxito');
+        alert()->success('Role actualizado con éxito');
+        return redirect()->route('roles.edit', $role->id);
     }
 
     /**
@@ -105,6 +105,7 @@ class RoleController extends Controller
     {
         $role->delete();
 
-        return back()->with('info', 'Role eliminado correctamente');
+        alert()->success('Role eliminado con éxito');
+        return back();
     }
 }

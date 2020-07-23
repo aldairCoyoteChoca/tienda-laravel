@@ -3,11 +3,10 @@
     {{ Form::text('name', null, ['class' => 'form-control', 'id' => 'name']) }}
 </div>
 <div class="form-group">
-    {{ Form::hidden('slug', 'URL amigable') }}
     {{ Form::hidden('slug', null, ['class' => 'form-control', 'id' => 'slug']) }}
 </div>
 <div class="form-group">
-    {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-primary']) }}
+    {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-success']) }}
 </div>
 
 @section('scripts')

@@ -59,8 +59,8 @@ class UserController extends Controller
         //actualiza el rol
         $user->roles()->sync($request->get('roles'));
         
-        return redirect()->route('users.edit', $user->id)
-            ->with('info', 'Usuario actualizado con éxito');
+        alert()->success('Usuario actualizado con éxito');
+        return redirect()->route('users.edit', $user->id);
     }
 
     /**
@@ -73,6 +73,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return back()->with('info', 'Usuario eliminado correctamente');
+        alert()->success('Usuario eliminado con éxito');
+        return back();
     }
 }

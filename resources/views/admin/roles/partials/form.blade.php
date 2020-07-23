@@ -1,10 +1,9 @@
 <div class="form-group">
-    {{ Form::label('name', 'Nombre del usuario') }}
+    {{ Form::label('name', 'Nombre del role') }}
     {{ Form::text('name', null, ['class' => 'form-control']) }}
 </div>
 <div class="form-group">
-    {{ Form::hidden('slug', 'URL amigable') }}
-    {{ Form::hidden('slug', null, ['class' => 'form-control']) }}
+    {{ Form::hidden('slug', null, ['class' => 'form-control', 'id' => 'slug']) }}
 </div>
 <div class="form-group">
     {{ Form::label('description', 'Descripción') }}
@@ -32,11 +31,12 @@
     </ul>
 </div>
 <div class="form-group">
-    {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-primary']) }}
+    {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-success']) }}
 </div>
 
 @section('scripts')
 <script src="{{ asset('vendor/stringToSlug/jquery.stringToSlug.min.js')}}"></script>
+<script src="{{ asset('vendor/ckeditor/ckeditor.js')}}"></script>
 <script>
 $(document).ready(function(){
   $("#name, #slug").stringToSlug({
@@ -45,5 +45,11 @@ $(document).ready(function(){
     }
   })
 })
+
+// Editor de Texto
+CKEDITOR.config.height = 'auto'
+CKEDITOR.config.width = 'auto'
+
+CKEDITOR.replace('description')
 </script>    
 @endsection

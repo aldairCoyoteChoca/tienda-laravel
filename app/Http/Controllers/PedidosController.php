@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,14 +19,24 @@ class PedidosController extends Controller
 
     public function adminPedidos()
     {
-       $carts = Cart::all();
+      $cartsCancelados = Cart::OrderBy('id', 'DESC')
+      ->where('status', 'Cancelado')
+      ->paginate(5);
 
-       return view('admin.pedidos.pedidos', compact('carts'));
+       $cartsEntregados = Cart::OrderBy('id', 'DESC')
+       ->where('status', 'Entregado')
+       ->paginate(5);
+
+       $cartsPending = Cart::OrderBy('id', 'DESC')
+       ->where('status', 'En camino')
+       ->paginate(5);
+
+       return view('admin.pedidos.pedidos', compact('cartsCancelados', 'cartsEntregados' ,'cartsPending'));
     }
 
     public function pedidos()
     {   
-
+        //$order = \DB::select('select * from orders WHERE ');// aqui te quedaste
         $user = auth()->user();
         $carts = Cart::orderBy('id', 'DESC')
         ->paginate()
@@ -35,16 +45,16 @@ class PedidosController extends Controller
         return view('web.pedidos', compact('carts'));
     }
 
-    public function pedido($id)
+    public function pedido(Cart $cart)
     {   
-        $user = Cart::find($id);
-        $this->authorize('pasale', $user);
+        // $cart = Cart::find($id);
+        //$this->authorize('pasale', $user);
 
-        $productos = CartDetail::get()->where('cart_id', $id);
+        $productos = CartDetail::get()->where('cart_id', $cart->id);
 
-        $totalProductos = CartDetail::where('cart_id', $id)->sum('quantify');
+        $totalProductos = CartDetail::where('cart_id', $cart->id)->sum('quantify');
 
-        $total = CartDetail::where('cart_id', $id)->sum('subtotal');
+        $total = CartDetail::where('cart_id', $cart->id)->sum('subtotal');
 
         return view('web.pedido', compact('productos', 'totalProductos', 'total'));
     }
@@ -72,7 +82,6 @@ class PedidosController extends Controller
         $cart->cancel_order = Carbon::now();
         $cart->save();
       }
-
       //enviar correo de cancelacion
       alert()->success('Pedido Cancelado');
       return back();
