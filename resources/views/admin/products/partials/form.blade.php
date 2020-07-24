@@ -22,8 +22,8 @@
 </div>
 <hr>
 <div class="form-group">
-    {{ Form::label('file', 'Imagen:') }}
-    {{ Form::file('file') }}
+    {{ Form::label('file_up', 'Imagen:') }}
+    {{ Form::file('file_up',['id' => 'file_up', 'accept' => 'image/*']) }}
 </div>
 <hr>
 <div class="form-group">
@@ -33,7 +33,7 @@
         | {{ Form::radio('status', 'PUBLISHED') }} Publicar.
     </label>
     <label>
-        | {{ Form::radio('status', 'DRAFT') }} Guardar como borrador.
+        | {{ Form::radio('status', 'DRAFT') }} Guardar como borrador o desactivar.
     </label>
 </div>
 <hr>

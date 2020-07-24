@@ -7,6 +7,7 @@
   <title>Administrador</title>
   <!-- Custom fonts for this template-->
   <link href="{{ asset('css/all.min.css')}}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('bootstrap-fileinput/css/fileinput.min.css')}}" rel="stylesheet" type="text/css">
   <link href="{{ url('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')}}" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
@@ -570,17 +571,27 @@
     </div>
   </div>
 
-  <!-- Bootstrap core JavaScript-->
   <script src="{{ asset('js/jquery.min.js')}}"></script>
   <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
-
-  <!-- Core plugin JavaScript-->
   <script src="{{ asset('js/jquery.easing.min.js')}}"></script>
-
-  <!-- Custom scripts for all pages-->
   <script src="{{ asset('js/sb-admin-2.min.js')}}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="{{ asset('bootstrap-fileinput/js/fileinput.min.js')}}"></script>
+  <script src="{{ asset('bootstrap-fileinput/js/locales/es.js')}}"></script>
+  <script src="{{ asset('bootstrap-fileinput/themes/fas/theme.min.js')}}"></script>
+  <script src="{{ asset('js/index.js') }}"></script>
   @yield('scripts')
-  @include('sweetalert::alert')
+  <script>
+    $('#file_up').fileinput({
+        language:'es',
+        allowedFileExtensions: ['jpg', 'jpeg', 'png'],
+        maxFileSize: 1000,
+        showUpload: false,
+        showClose:false,
+        initialPreviewAsData: true,
+        dropZoneEnabled:true,
+        theme: "fas",
+    });
+  </script>
+    @include('sweetalert::alert')
 </body>
 </html>

@@ -21,6 +21,19 @@
         @endforeach
     </ul>
 </div>
+<hr>
+<div class="form-group">
+    {{ Form::label('pedidos', '¿Desea que este usuario reciba los pedidos via Email?') }} <br>
+    <label>
+      {{ Form::radio('pedidos', 'RECIBIR') }}
+      <span>Recibir pedidos</span>
+    </label>
+    <label>
+      {{ Form::radio('pedidos', 'NO RECIBIR') }}
+      <span>No recibir pedidos</span>
+    </label>
+</div>
+<hr>
 <div class="form-group">
     {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-success']) }}
 </div>

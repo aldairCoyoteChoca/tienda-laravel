@@ -18,9 +18,10 @@
       </thead>
       <tbody>
           @forelse ($products as $product)
+          @if($product->product->stock >=1)
           <tr>
             <td>
-              <img class="" width="50px" src="{{ asset('/'.$product->file) }}">
+              <img class="" width="50px" src="{{ asset('/'.$product->product->file) }}">
             </td>
             <td>
               <a class="" href="{{route('product', $product->product->slug)}}">
@@ -31,8 +32,8 @@
             <td>
               <form method="POST" action="{{ route('carrito.update') }}">
                 @csrf
-                <input type="hidden" name="product_id" value="{{$product->product_id}}">
-                <input type="hidden" name="price" value="{{ $product->price }}">
+                <input type="hidden" name="product_id" value="{{$product->product->id}}">
+                <input type="hidden" name="price" value="{{ $product->product->price }}">
                 <select name="quantify" class="update form-control">
                   @for ($i = 1; $i <= $product->product->stock; $i++)
                   @if ($i == $product->quantify)
@@ -44,7 +45,7 @@
                 </select>
               </form>
             </td>
-            <td>$ <span id="subtotal">{{ $product->price * $product->quantify }}</span> </td>
+            <td>$ <span id="subtotal{{ $product->product_id }}">{{ $product->product->price * $product->quantify }}</span> </td>
             <td>
               {!! Form::open(['route' => ['carrito.delete', $product->id],
               'method' => 'DELETE']) !!}
@@ -54,6 +55,7 @@
               {!! Form::close() !!}
             </td>
           </tr>
+          @endif
           @empty
             <h5 class="">Tu carrito está vacío</h5>
           @endforelse
@@ -187,6 +189,7 @@
       </form>
       {!! Form::open(['route' => ['carrito.order'], 'id' => 'enviar',
       'method' => 'POST']) !!}
+        {{ Form::hidden('id', auth()->user()->cart->id) }}
       {!! Form::close() !!}
     </div>
   </div>
@@ -202,6 +205,6 @@
 </div>
 @endsection
 @section('scripts')
-<script src="https://cdn.conekta.io/js/latest/conekta.js"></script>
-<script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+<script src="{{ asset('js/carshop.js') }}"></script>
+<script src="{{ url('https://cdn.conekta.io/js/latest/conekta.js')}}"></script>
 @endsection

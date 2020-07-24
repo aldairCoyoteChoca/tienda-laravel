@@ -47,13 +47,14 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
-        $product = Product::create($request->all());
-
-        //image
-        if($request->file('file')){
-            $path = Storage::disk('public')->put('image', $request->file('file'));
-            $product->fill(['file' => $path])->save();
+        
+        if($file = Product::setFile($request->file_up)){
+            $request->request->add(['file' => "image/$file"]);
+        }else{
+            $request->request->add(['file' => "image/icons/productdefault.jpg"]);
         }
+
+        $product = Product::create($request->all());
         //tags
         $product->tags()->attach($request->get('tags'));
 
@@ -95,14 +96,18 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product)
     {
-        $product->fill($request->all())->save();
-
-        //image
-        if($request->file('file')){
-            $path = Storage::disk('public')->put('image', $request->file('file'));
-            $product->fill(['file' => $path])->save();
+        if($request->file_up){
+            if($file = Product::setFile($request->file_up)){
+                $request->request->add(['file' => "image/$file"]);
+            }
+            if($product->file !== 'image/icons/productdefault.jpg'){
+                if(public_path("$product->file")){
+                    unlink(public_path("$product->file"));
+                }
+            }
         }
-
+        
+        $product->fill($request->all())->save();
         //tags
         $product->tags()->sync($request->get('tags'));
 

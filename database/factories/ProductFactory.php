@@ -15,9 +15,9 @@ $factory->define(Product::class, function (Faker $faker) {
         'slug' => Str::slug($title),
         'excerpt' => $faker->text(50),
         'description' => $faker->text(100),
-        'file' => $faker->imageUrl($width = 1200, $height = 400),
+        'file' => 'image/icons/productdefault.jpg',
         'status' => $faker->randomElement(['DRAFT', 'PUBLISHED']),
-        'stock' => 40,
+        'stock' => 1,
         'price' => rand(1,500),
     ];
 });

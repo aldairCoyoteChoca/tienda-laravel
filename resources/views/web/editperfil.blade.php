@@ -1,70 +1,86 @@
 @extends('layouts.app')
-
 @section('content')
+<br>
+<br>
+<br>
 <div class="container">
   <div class="row">
-    <div class="col s12">
-      <div class="card">
-        <div class="card-content">
-          <a class="waves-effect waves-light btn-small btn-small left pink darken-3" href="{{ url()->previous() }}">
-            <i class="material-icons">arrow_back</i>
-          </a>
-          <span class="card-title center">Editar perfil</span>
-          <br>
-          <div class="">
-            {!! Form::model($user, ['route' => ['user.update', auth()->user()->id],
-             'method' => 'PUT', 'files' => true]) !!}
-
-                <div class="input-field black-text">
-                    {{ Form::label('name', 'Nombre del usuario') }}
-                    {{ Form::text('name', null, ['class' => 'form-control']) }}
-                </div>
-                <div class="input-field black-text">
-                    {{ Form::label('address', 'Dirección de entrega') }}
-                    {{ Form::text('address', null, ['class' => 'form-control']) }}
-                </div>
-                <div class="input-field black-text">
-                    {{ Form::label('postal_code', 'CP') }}
-                    {{ Form::text('postal_code', null, ['class' => 'form-control']) }}
-                </div>
-                <div class="input-field black-text">
-                    {{ Form::label('phone', 'Teléfono') }}
-                    {{ Form::text('phone', null, ['class' => 'form-control']) }}
-                </div>
-                <span class="card-title center">Datos Fiscales (Solo si necesita Factura)</span>
-                <div class="input-field black-text">
-                    {{ Form::label('name_fiscal', 'Nombre Fiscal') }}
-                    {{ Form::text('name_fiscal', null, ['class' => 'form-control']) }}
-                </div>
-                <div class="input-field black-text">
-                    {{ Form::label('address_fiscal', 'Dirección Fiscal') }}
-                    {{ Form::text('address_fiscal', null, ['class' => 'form-control']) }}
-                </div>
-                <div class="input-field black-text">
-                    {{ Form::label('rfc', 'RFC') }}
-                    {{ Form::text('rfc', null, ['class' => 'form-control']) }}
-                </div>
-                <span class="card-title">Foto</span>
-                <div class="file-field input-field">
-                  <div class="btn-small pink darken-3">
-                    <span>Foto</span>
-                    <input type="file">
-                  </div>
-                  <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text">
-                  </div>
-                  {{ Form::file('photo', ['class' => 'file'])}}
-                </div>
-     
-                <div class="input-field black-text">
-                    {{ Form::submit('Guardar', ['class' => 'btn-small blue']) }}
-                </div>
-                
-            {!! Form::close() !!}
+    <div class="col">
+      <div class="card text-center">
+        {!! Form::model($user, ['route' => ['user.update', auth()->user()->id],
+        'method' => 'PUT', 'files' => true]) !!}
+          <div class="card-header">
+            <div class="float-left">
+              @if (Auth::user()->photo)
+              <img class="card-img" src=" {{ asset(Auth::user()->photo) }} " style="width:80px; border-radius:150px;" class="d-block w-100 "> 
+              @endif
+            </div>
+            {{ Form::label('name', 'Nombre del usuario') }}
+            {{ Form::text('name', null, ['class' => 'form-control col-4 mx-auto']) }}
           </div>
-        </div>
+          <div class="row">
+            <div class="col-12">
+              <h3>Datos:</h3>
+            </div>
+            <div class="col-3">
+              {{ Form::label('email', 'Correo') }}
+              {{ Form::text('email', null, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-3">
+                {{ Form::label('address', 'Dirección de entrega') }}
+                {{ Form::text('address', null, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-3">
+                {{ Form::label('postal_code', 'Código postal') }}
+                {{ Form::text('postal_code', null, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-3">
+                {{ Form::label('phone', 'Teléfono') }}
+                {{ Form::text('phone', null, ['class' => 'form-control']) }}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+              <div class="col-12">
+                <h3>Datos Fiscales:</h3>
+              </div>
+              <div class="col-4">
+                  {{ Form::label('name_fiscal', 'Nombre Fiscal') }}
+                  {{ Form::text('name_fiscal', null, ['class' => 'form-control']) }}
+              </div>
+              <div class="col-4">
+                  {{ Form::label('address_fiscal', 'Dirección Fiscal') }}
+                  {{ Form::text('address_fiscal', null, ['class' => 'form-control']) }}
+              </div>
+              <div class="col-4">
+                  {{ Form::label('rfc', 'RFC') }}
+                  {{ Form::text('rfc', null, ['class' => 'form-control']) }}
+              </div>
+              <div class="col-12">
+                {{ Form::label('photo_up', 'Imagen:') }}
+                {{ Form::file('photo_up',['id' => 'photo_up', 'accept' => 'image/*']) }}
+              </div>
+            </div>
+            <div class="card-footer text-muted mx-auto">
+              {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-primary']) }}
+            </div>
+       {!! Form::close() !!}
       </div>
     </div>
   </div>
-</div>
+</div>        
+@endsection
+@section('scripts')
+<script>
+  $('#photo_up').fileinput({
+      language:'es',
+      allowedFileExtensions: ['jpg', 'jpeg', 'png'],
+      maxFileSize: 1000,
+      showUpload: false,
+      showClose:false,
+      initialPreviewAsData: true,
+      dropZoneEnabled:false,
+      theme: "fas",
+  });
+</script>
 @endsection

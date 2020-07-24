@@ -145,6 +145,9 @@ Route::get('admin/pedidos',                 'PedidosController@adminPedidos')->n
 Route::post('cancelar',                     'PedidosController@cancelar')->name('cancelar')
   ->middleware('verified');
 
+Route::post('devolucion',                     'PedidosController@devolucion')->name('devolucion')
+  ->middleware('verified');
+
 Route::post('entregado',                    'PedidosController@entregado')->name('entregado')
   ->middleware('verified');
 

@@ -9,6 +9,7 @@ use App\Cart;
 use App\CartDetail;
 use App\User;
 use Carbon\Carbon;
+use App\Product;
 
 class PedidosController extends Controller
 {
@@ -23,6 +24,10 @@ class PedidosController extends Controller
       ->where('status', 'Cancelado')
       ->paginate(5);
 
+      $cartsDevueltos = Cart::OrderBy('id', 'DESC')
+      ->where('status', 'Devuelto')
+      ->paginate(5);
+
        $cartsEntregados = Cart::OrderBy('id', 'DESC')
        ->where('status', 'Entregado')
        ->paginate(5);
@@ -31,7 +36,7 @@ class PedidosController extends Controller
        ->where('status', 'En camino')
        ->paginate(5);
 
-       return view('admin.pedidos.pedidos', compact('cartsCancelados', 'cartsEntregados' ,'cartsPending'));
+       return view('admin.pedidos.pedidos', compact('cartsCancelados', 'cartsEntregados' ,'cartsPending', 'cartsDevueltos'));
     }
 
     public function pedidos()
@@ -72,10 +77,16 @@ class PedidosController extends Controller
     }
 
     public function cancelar(Request $request)
-        // cancela el$ pedido
+        // cancela el pedido
     { 
 
       $cart = auth()->user()->cart->where('id', $request->id)->first();
+      $products = $cart->details;
+      
+      foreach($products as $product){
+        $product->product->stock =  $product->product->stock + $product->quantify; 
+        $product->product->save();
+      }
   
       if($cart) {
         $cart->status = 'Cancelado';
@@ -88,18 +99,46 @@ class PedidosController extends Controller
     
     }
 
+    public function devolucion(Request $request)
+        // devoluvion de el pedido
+    { 
+
+      $cart = auth()->user()->cart->where('id', $request->id)->first();
+      $products = $cart->details;
+      
+      foreach($products as $product){
+        $product->product->stock =  $product->product->stock + $product->quantify; 
+        $product->product->save();
+      }
+  
+      if($cart) {
+        $cart->status = 'Devuelto';
+        $cart->cancel_order = Carbon::now();
+        $cart->save();
+      }
+      //enviar correo de cancelacion
+      alert()->success('Pedido devuelto');
+      return back();
+    
+    }
+
     public function entregado(Request $request)
         // entregado 
     { 
 
       $cart = auth()->user()->cart->where('id', $request->id)->first();
+      $products = $cart->details;
+      
+      foreach($products as $product){
+        $product->product->stock =  $product->product->stock - $product->quantify; 
+        $product->product->save();
+      }
   
       if($cart) {
         $cart->status = 'Entregado';
         $cart->arrived_date = Carbon::now();
         $cart->save();
       }
-
       //enviar correo de confirmacion
       alert()->success('Pedido Entregado');
       return back();
