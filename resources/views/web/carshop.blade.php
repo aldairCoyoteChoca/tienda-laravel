@@ -1,19 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<h2 class="">Carrito de Compras</h2>
+<br>
+<br>
+<br>
+<br>
+<h2 class="text-center">Carrito de Compras</h2>
   <div class="container">
     <div class="row">
     <hr>
-    <table class="">
+    <table class="table">
       <thead>
         <tr>
-          <th></th>
-          <th>Nombre</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
-          <th>Subtotal</th>
-          <th>Eliminar</th>
+          <th scope="col"></th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Subtotal</th>
+          <th scope="col">Eliminar</th>
         </tr>
       </thead>
       <tbody>
@@ -49,9 +53,7 @@
             <td>
               {!! Form::open(['route' => ['carrito.delete', $product->id],
               'method' => 'DELETE']) !!}
-                <button class="delete">
-                  <i class="">delete_forever</i> 
-                </button>
+                <button class="delete btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i></button>
               {!! Form::close() !!}
             </td>
           </tr>
@@ -63,7 +65,7 @@
       </table>
       <hr>
       <div class="container">
-        <table class="">
+        <table class="table">
           <thead>
             <tr>
               <th>Total de productos</th>
@@ -167,10 +169,18 @@
                               Falta la fecha de expiración(YYYY-MM) o no es una fecha válida.
                           </div>
                       </div>
-                      <div class="form-group col-lg-6">
-                        <div class="container">
-                          <span name="total" id="gran_total">{{ auth()->user()->cart->total }}</span>
-                        </div>
+                      <div class="form-group col-lg-6"><br>
+                         <strong>Total: </strong>$<span name="total" id="gran_total">{{ auth()->user()->cart->total }}</span>.00
+                        <br>
+                        <span style="font-size: 2em">
+                          <i class="fab fa-cc-mastercard" style="size:8x"></i>
+                        </span>
+                        <span style="font-size: 2em">
+                          <i class="fab fa-cc-visa"></i>
+                        </span>
+                        <span style="font-size: 2em">
+                          <i class="fab fa-cc-amex"></i>
+                        </span>
                       </div>
                   </div>
               </div>
@@ -183,12 +193,14 @@
           </button>
         </div>
         <input type="hidden" name="conektaTokenId" id="conektaTokenId">
+        <input type="hidden" name="cart_id" id="cart_id" value="{{ auth()->user()->cart->id }}">
         <input type="hidden" name="description" id="description" value="Carrito: {{ auth()->user()->cart->id }}">
         <input type="hidden" name="total" id="total" value="{{ auth()->user()->cart->total }}">
         <input type="hidden" id="card" name="card" minlength="16" maxlength="16" data-conekta="card[number]" required/>
       </form>
       {!! Form::open(['route' => ['carrito.order'], 'id' => 'enviar',
       'method' => 'POST']) !!}
+      <button >Enviar</button>
         {{ Form::hidden('id', auth()->user()->cart->id) }}
       {!! Form::close() !!}
     </div>

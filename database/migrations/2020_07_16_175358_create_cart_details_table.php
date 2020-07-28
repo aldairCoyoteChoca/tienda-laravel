@@ -20,6 +20,7 @@ class CreateCartDetailsTable extends Migration
             $table->foreign('cart_id')->references('id')->on('carts')
             ->onDelete('cascade')
             ->onUpdate('cascade');
+            $table->enum('status', [1, 2]);
 
             $table->unsignedBigInteger('product_id')->index();
             $table->foreign('product_id')->references('id')->on('products')

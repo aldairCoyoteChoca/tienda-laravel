@@ -36,7 +36,7 @@
             </div>
           </div>
           <hr>
-          <div class="row">
+          {{-- <div class="row">
             <div class="col-12">
               <h3>Datos fiscales:</h3>
             </div>
@@ -52,7 +52,7 @@
               <strong>RFC:</strong>
                {{ Auth::user()->rfc }}
             </div>
-        </div>
+        </div> --}}
         <br>
         <div class="card-footer text-muted">
           <a class="btn btn-sm btn-primary" href=" {{ route('user.edit', Auth::user()->id) }} ">Editar perfil</a>

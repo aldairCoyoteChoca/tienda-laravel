@@ -84,6 +84,21 @@
 @extends('layouts.app')
 
 @section('content')
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <h5 class="text-center text-monospace">¡Bienvenido a esta página de prueba @isset(Auth::user()->name){{ Auth::user()->name }} @endisset!</h5>
+    <p class="text-center text-monospace">Esta página cuenta con los estilos de diseño básicos, favor de no tomarlos en cuenta.</p>
+    <p class="text-center text-monospace">Por favor realiza las pruebas necesarias para el funcionamiento de esta página web.</p>
+</div>
 {{-- <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

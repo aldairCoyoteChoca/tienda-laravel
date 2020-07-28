@@ -14,8 +14,9 @@ class Payment{
     private $DataBaseDB="tienda-laravel";
 
 
-    public function __construct($token,$name,$email,$telephone,$card,$description,$total){
+    public function __construct($token,$cart_id,$name,$email,$telephone,$card,$description,$total){
         $this->token=$token;
+        $this->cart_id;
         $this->name=$name;
         $this->email=$email;
         $this->telephone=$telephone;
@@ -54,6 +55,7 @@ class Payment{
             VALUES (:name, :email, :telephone, :card, :description,:total, now(), :order_id, :token)");
     
         $statement->execute([
+            'cart_id' => $this->cart_id,
             'name' => $this->name,
             'email'=> $this->email,
             'telephone'=> $this->telephone,

@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <h5 class="text-center text-monospace">Bienvenido al home @isset(Auth::user()->name){{ Auth::user()->name }}@endisset </h5>
+</div>
 {{-- <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

@@ -41,18 +41,38 @@ class PedidosController extends Controller
 
     public function pedidos()
     {   
-        //$order = \DB::select('select * from orders WHERE ');// aqui te quedaste
-        $user = auth()->user();
+      $user = auth()->user();
+
+      $cartsCancelados = Cart::OrderBy('id', 'DESC')
+      ->where('status', 'Cancelado')
+      ->where('user_id', $user->id)
+      ->paginate(5);
+
+      $cartsDevueltos = Cart::OrderBy('id', 'DESC')
+      ->where('status', 'Devuelto')
+      ->where('user_id', $user->id)
+      ->paginate(5);
+
+       $cartsEntregados = Cart::OrderBy('id', 'DESC')
+       ->where('status', 'Entregado')
+      ->where('user_id', $user->id)
+       ->paginate(5);
+
+       $cartsPending = Cart::OrderBy('id', 'DESC')
+       ->where('status', 'En camino')
+      ->where('user_id', $user->id)
+       ->paginate(5);
+
         $carts = Cart::orderBy('id', 'DESC')
         ->paginate()
         ->where('user_id', $user->id);
 
-        return view('web.pedidos', compact('carts'));
+        return view('web.pedidos', compact('cartsCancelados', 'cartsEntregados' ,'cartsPending', 'cartsDevueltos', 'user'));
     }
 
     public function pedido(Cart $cart)
     {   
-        // $cart = Cart::find($id);
+        //$cart = Cart::find($id);
         //$this->authorize('pasale', $user);
 
         $productos = CartDetail::get()->where('cart_id', $cart->id);

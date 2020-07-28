@@ -13,7 +13,7 @@ class PageController extends Controller
     {   
         $products = Product::orderBy('id', 'DESC')
         ->where('status', 'PUBLISHED')
-        ->paginate(10);
+        ->paginate(12);
         return view('web.products', compact('products'));
     }
 

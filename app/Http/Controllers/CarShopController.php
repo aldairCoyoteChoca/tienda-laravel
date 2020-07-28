@@ -95,6 +95,7 @@ class CarShopController extends Controller
         $cartDetail->product_id  = $request->product_id;
         $cartDetail->quantify = $request->quantify;
         $cartDetail->price   = $request->price;
+        $cartDetail->status   = 1;
         $cartDetail->subtotal = $cartDetail->price * $cartDetail->quantify;
         $cartDetail->save();
       }
@@ -126,34 +127,38 @@ class CarShopController extends Controller
    //envia la orden por correo y actualiza los campos
    public function order(Request $request)
    {
-     
     $client           = auth()->user();
     $cart             = $client->cart;
     $cart->status     = 'En camino';
     $cart->order_date = Carbon::now();
     $cart->save();
+    // envia un mail con el pedido
+    $recibir_pedidos  = User::where('pedidos', 'RECIBIR')->get();
+    Mail::to($recibir_pedidos)->send(new NewOrder($client, $cart));
 
-    $cart = auth()->user()->cart->where('id', $request->id)->first();
-    $products = $cart->details;
-
+    $cartDetail = auth()->user()->cart->where('id', $request->id)->first();
+    $products = $cartDetail->details;
+    //product es el cartdetail de la tabla
+    //product->product = el producto
     foreach($products as $product){
+     //a cada producto del carrito le da el valor de 2
+      $product->status = 2;
+      $product->save();
+      //a cada producto del carrito le restamos al stock la cantidad pedida
       $product->product->stock =  $product->product->stock - $product->quantify; 
       $product->product->save();
-
-      if($product->product->stock == 0){
-        // busque todos los registro del cardetail y si coinciden con el id del producto los elimine de los carritos
-        $detail = CartDetail::where('product_id', $product->product->id);
-        $carritos = Cart::all()->where('status', 'Active');
-        foreach($carritos as $carrito){
-          if($carrito->status == 'Active'){
+      //details trae los productos del cartdetail que estan en status 1 osea en un carrito
+      $details = CartDetail::get()
+      ->where('product_id', $product->product->id)
+      ->where('status', 1);
+      foreach($details as $detail){
+        if($product->product->stock == 0){
+          if($detail->status == 1){
             $detail->delete();
           }
         }
       }
     }
-    $recibir_pedidos  = User::where('pedidos', 'RECIBIR')->get();
-    Mail::to($recibir_pedidos)->send(new NewOrder($client, $cart));
-
     alert()->success('Pedido enviado');
     return redirect('productos');
   }

@@ -11,7 +11,7 @@ class ProductsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Product::class, 100)->create()->each(function(App\Product $product) {
+        factory(App\Product::class, 10)->create()->each(function(App\Product $product) {
         	$product->tags()->attach([
         		rand(1,10), 
                 rand(11,20),

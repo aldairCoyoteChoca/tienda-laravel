@@ -42,28 +42,13 @@
           <hr>
           <div class="row">
               <div class="col-12">
-                <h3>Datos Fiscales:</h3>
-              </div>
-              <div class="col-4">
-                  {{ Form::label('name_fiscal', 'Nombre Fiscal') }}
-                  {{ Form::text('name_fiscal', null, ['class' => 'form-control']) }}
-              </div>
-              <div class="col-4">
-                  {{ Form::label('address_fiscal', 'Dirección Fiscal') }}
-                  {{ Form::text('address_fiscal', null, ['class' => 'form-control']) }}
-              </div>
-              <div class="col-4">
-                  {{ Form::label('rfc', 'RFC') }}
-                  {{ Form::text('rfc', null, ['class' => 'form-control']) }}
-              </div>
-              <div class="col-12">
                 {{ Form::label('photo_up', 'Imagen:') }}
                 {{ Form::file('photo_up',['id' => 'photo_up', 'accept' => 'image/*']) }}
               </div>
-            </div>
-            <div class="card-footer text-muted mx-auto">
-              {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-primary']) }}
-            </div>
+          </div>
+          <div class="card-footer text-muted mx-auto">
+            {{ Form::submit('Guardar', ['class' => 'btn btn-sm btn-primary']) }}
+          </div>
        {!! Form::close() !!}
       </div>
     </div>

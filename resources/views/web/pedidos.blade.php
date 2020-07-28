@@ -1,114 +1,148 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container ">
-  <div class="row">
-    <div class="card">
-      <div class="card-content center">
-        <a class="btn-small left pink darken-3" href="{{ url()->previous() }}">
-          <i class="material-icons">arrow_back</i>
-        </a>
-        <span class="card-title center">Mis pedidos</span>
+<br>
+<br>
+<br>
+<div class="container">
+  <ul class="nav nav-pills mb-12" id="pills-tab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="pills-encamino-tab" data-toggle="pill" href="#pills-encamino" role="tab" aria-controls="pills-encamino" aria-selected="false">En camino</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="pills-entregados-tab" data-toggle="pill" href="#pills-entregados" role="tab" aria-controls="pills-entregados" aria-selected="true">Entregados</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="pills-cancelados-tab" data-toggle="pill" href="#pills-cancelados" role="tab" aria-controls="pills-cancelados" aria-selected="false">Cancelados</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="pills-tabContent">
+    {{-- pedidos en camino --}}
+    <div class="tab-pane fade show active" id="pills-encamino" role="tabpanel" aria-labelledby="pills-encamino-tab">
+      @forelse ($cartsPending as $cart)
+      <div class="card text-center">
+        <div class="card-header">
+          Pedido "{{ config('app.name') }} {{$cart->id}}" 
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Estado: {{ $cart->status}} - Cliente: {{$cart->user_id}}</h5>
+          <p class="card-text">Fecha de orden: {{\Carbon\Carbon::parse($cart->order_date)->format('d/m/Y')}}</p>
+          <a href="{{ route('pedido', $cart->id)}}" class="btn btn-sm btn-primary">Ver pedido</a>
+        </div>
+        <div class="card-footer text-muted">
+          <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modalcancel{{$cart->id}}"><i class="fas fa-trash"></i> Cancelar pedido</button>
+        </div>
       </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="container  center">
-            <ul id="tabs-swipe-demo" class="tabs">
-              <li class="tab col s4"><a class="active orange-text" href="#test-swipe-1">¡En camino!</a></li>
-              <li class="tab col s4"><a class="green-text" href="#test-swipe-2">Entregados</a></li>
-              <li class="tab col s4"><a class="red-text" href="#test-swipe-3">Cancelados</a></li>
-            </ul>
-            <div id="test-swipe-1" class="col s12">
-              @forelse ($carts->where('status', 'Pending') as $cart)
-              <ul class="collection">
-                @if ($cart->status == 'Pending')
-                <li class="collection-item avatar">
-                  <a href=" {{ route('pedido', $cart->id)}}" class="">
-                    <img src="{{ asset('image/icons/envio.png')}} " alt="" class="circle">
-                    <p> Pedido "EATH{{$cart->id}}" </p>
-                    <p>
-                      <strong>Estado:</strong> ¡En camino!
-                    </p>
-                    <p>
-                      <strong>Fecha de orden: </strong>{{$cart->order_date}}
-                    </p>
-                    <!-- Modal Trigger para cancelacion-->
-                    <a class="secondary-content waves-light btn modal-trigger red" href="#modal{{ $cart->id }}">
-                    <i class="material-icons">delete_forever</i></a>
-                    <!-- Modal Structure -->
-                    <div id="modal{{ $cart->id }}" class="modal">
-                      <div class="modal-content center">
-                        <h4>Cancelar pedido</h4>
-                        <h5 class="center-align">¿Estás seguro de querer cancelar tu pedido?</h5>
-                      </div>
-                      <div class="modal-footer center">
-                        <button href="#!" class="modal-close btn-flat left pink darken-3 white-text">No me canceles :c</button>
-                        <form method="POST" action="{{ route('cancelar') }}">
-                          @csrf
-                          <input type="hidden" name="id" value="{{$cart->id}}">
-                          <button class="btn waves-light red" type="submit" name="action">Cancelar
-                            <i class="material-icons right">delete_forever</i>
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                @endif
-              </ul>
-                @empty
-                <h5 class="collection-item center orange-text">¡No tienes pedidos aún!</h5>
-                @endforelse
-              
-            </div>
-            <div id="test-swipe-2" class="col s12">
-              @forelse ($carts->where('status', 'Entregado') as $cart)
-              <ul class="collection center">
-                @if ($cart->status == 'Entregado')
-                <li class="collection-item avatar center">
-                  <a href=" {{ route('pedido', $cart->id)}}" class="collection-item">
-                    <img src="{{ asset('image/icons/envio.png')}} " alt="" class="circle">
-                    <p> Pedido "EATH{{$cart->id}}" </p>
-                    <p>
-                      <strong>Estado:</strong> ¡Entregado!
-                    </p>
-                    <p>
-                      <strong>Fecha de orden: </strong>{{$cart->order_date}}
-                    </p>
-                  </a>
-                </li>
-                @endif
-              </ul>
-                @empty
-                <h5 class="collection-item center green-text">¡No tienes pedidos entregados aún!</h5>
-                @endforelse
-               
-            </div>
-            <div id="test-swipe-3" class="col s12">
-              @forelse ($carts->where('status', 'Cancelado') as $cart)
-              <ul class="collection center">
-                @if ($cart->status == 'Cancelado')
-                <li class="collection-item avatar center">
-                  <a href=" {{ route('pedido', $cart->id)}}" class="collection-item">
-                  <img src="{{ asset('image/icons/envio.png')}} " alt="" class="circle">
-                  <p> Pedido "EATH{{$cart->id}}" </p>
-                    <p>
-                      <strong>Estado:</strong> ¡Cancelado!
-                    </p>
-                    <p>
-                      <strong>Fecha de orden: </strong>{{$cart->order_date}}
-                    </p>
-                  </a>
-                </li>
-                @endif
-              </ul>
-                @empty
-                <h5 class="collection-item center red-text">¡No tienes pedidos cancelados aún!</h5>
-                @endforelse
-                
+      <div class="modal fade" id="modalcancel{{$cart->id}}" tabindex="-1" role="dialog" aria-labelledby="modalcancelTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header mx-auto">
+                    <h5 class="modal-title mx-auto" id="modalcancelTitle">Pedido "{{ config('app.name') }} {{$cart->id}}" </h5>
+                </div>
+                <div class="modal-body mx-auto">
+                    ¿Estás seguro de querer cancelar este pedido?</h6>
+                </div>
+                <div class="mx-auto">
+                    <small>Esta acción no puede deshacerse.</small>
+                </div>
+                <div class="mx-auto">
+                  <small>Se enviara un correo de cancelación.</small>
+              </div>
+                <div class="modal-footer mx-auto">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <form method="POST" action="{{ route('cancelar') }}">
+                      @csrf
+                      <input type="hidden" name="id" value="{{$cart->id}}">
+                      <button class="btn btn-sm btn-danger text-white"><i class="fas fa-trash"></i> Cancelar
+                      </button>
+                    </form>
+                </div>
             </div>
           </div>
+      </div>
+      <br>
+      <hr>
+      @empty
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="container">
+        <h5 class="text-center text-monospace">¡No tienes pedidos en camino aún!</h5>
+      </div>
+      @endforelse
+      {{-- {{ $cartsPending->render() }} --}}
+    </div>
+    {{-- pedidos entregados --}}
+    <div class="tab-pane fade" id="pills-entregados" role="tabpanel" aria-labelledby="pills-entregados-tab">
+      <div id="test-swipe-2" class="col s10">
+        @forelse ($cartsEntregados as $cart)
+        <div class="card text-center">
+          <div class="card-header">
+            Pedido "{{ config('app.name') }} {{$cart->id}}" 
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Estado: {{ $cart->status}} - Cliente: {{$cart->user_id}}</h5>
+            <p class="card-text">Fecha de orden: {{\Carbon\Carbon::parse($cart->order_date)->format('d/m/Y')}}</p>
+            <p class="card-text">Fecha de entrega: {{\Carbon\Carbon::parse($cart->arrived_date)->format('d/m/Y')}}</p>
+            <a href="{{ route('pedido', $cart->id)}}" class="btn btn-sm btn-primary">Ver pedido</a>
+          </div>
+          <div class="card-footer text-muted">
+          </div>
         </div>
+        <br>
+        <hr>
+          @empty
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <div class="container">
+            <h5 class="text-center text-monospace">¡No tienes pedidos entregados aún!</h5>
+          </div>
+          @endforelse
+        </div>
+      </div>
+    {{-- pedidos cancelados --}}
+    <div class="tab-pane fade" id="pills-cancelados" role="tabpanel" aria-labelledby="pills-cancelados-tab">
+      <div id="test-swipe-3" class="col s10">
+        @forelse ($cartsCancelados as $cart)
+        <div class="card text-center">
+          <div class="card-header">
+            Pedido "{{ config('app.name') }} {{$cart->id}}" 
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Estado: {{ $cart->status}} - Cliente: {{$cart->user_id}}</h5>
+            <p class="card-text">Fecha de orden: {{\Carbon\Carbon::parse($cart->order_date)->format('d/m/Y')}}</p>
+            <p class="card-text">Fecha de cancelación: {{\Carbon\Carbon::parse($cart->cancel_order)->format('d/m/Y')}}</p>
+            <a href="{{ route('pedido', $cart->id)}}" class="btn btn-sm btn-primary">Ver pedido</a>
+          </div>
+          <div class="card-footer text-muted">
+          </div>
+        </div>
+      <br>
+      <hr>
+      @empty
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="container">
+        <h5 class="text-center text-monospace">¡No tienes pedidos cancelados aún!</h5>
+      </div>
+      @endforelse
       </div>
     </div>
   </div>

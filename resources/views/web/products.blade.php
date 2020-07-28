@@ -6,10 +6,9 @@
 <br>
 <div class="container">
     <div class="row row-cols-1 row-cols-md-3">
-        @foreach ($products as $product)
-        @if ($product->stock >= 1)
-        <div class="col mb-4">
-          <div class="card h-100 text-center">
+    @foreach ($products as $product)
+    <div class="col mb-4">
+        <div class="card h-100 text-center">
             <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                 <a href=" {{ route('product', $product->slug) }} ">
                     <div class="carousel-inner">
@@ -27,7 +26,10 @@
                 <h5 class="text-center"> ${{ $product->price }}.00 </h5>
             </div>
             <div class="card-footer">
-                {{-- /<a class="btn btn-sm btn-success float-left" href=" {{ route('products.edit', $product->id) }}">Editar</a> --}}
+                @can('products.edit')
+                <a class="btn btn-sm btn-success float-left" href=" {{ route('products.edit', $product->id) }}">Editar</a>
+                @endcan
+                @if ($product->stock >= 1)
                 @isset(Auth::user()->name)
                 <form method="POST" action="{{ route('carrito.add', $product->id) }}">
                     @csrf
@@ -43,14 +45,19 @@
                 <form action="{{ route('login') }}">
                     <button class="btn btn-sm btn-primary">
                         <i class="fas fa-cart-arrow-down"></i>
-                        Agregar
+                        Agregar al carrito
                     </button>
                 </form>
                 @endisset
+                @else
+                <button class="btn btn-sm btn-primary" disabled>
+                    <i class="fas fa-cart-arrow-down"></i>
+                    Producto agotado
+                </button>
+                @endif
             </div>
           </div>
         </div>
-        @endif
         @endforeach
     </div>
     {{ $products->render() }}

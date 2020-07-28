@@ -19,7 +19,7 @@ class CreateCartsTable extends Migration
             $table->date('order_date')->nullable();
             $table->date('cancel_order')->nullable();
             $table->date('arrived_date')->nullable();
-            $table->string('status');
+            $table->enum('status', ['Entregado', 'En camino', 'Cancelado', 'Active', 'Devuelto']);
 
             $table->unsignedBigInteger('user_id')->index();
 
